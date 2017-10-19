@@ -7,25 +7,25 @@ Author:       andrzej.bialowas@instapage.com
 */
 defined('ABSPATH') or die('No script kiddies please!');
 /**
-* This class adds an action which replaces strings from array named $abAlteredNames in 
-* content of posts and pages with $abAlterTo string.
+* This class adds an action which replaces strings from array named $textToAlter in 
+* content of posts and pages with $alterText string.
 */
 class AbAlternateContent {
   public function __construct() {
-    add_action('the_content', array($this, 'abAlternateText'));
+    add_action('the_content', [$this, 'textAlternate']);
   }
-  function abAlternateText($text) {
-    $abAlteredNames = [
+  function textAlternate($text) {
+    $textToAlter = [
       'leadpages',
       'unbounce'
     ];
-    $abAlterTo = 'Instapage';
-    $abAlteredContent = str_ireplace(
-      $abAlteredNames,
-      $abAlterTo,
+    $alterText = 'Instapage';
+    $alteredText = str_ireplace(
+      $textToAlter,
+      $alterText,
       $text
     );
-    return $abAlteredContent;
+    return $alteredText;
   }
 }
 $abAlterContent = new AbAlternateContent();
