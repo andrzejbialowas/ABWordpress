@@ -2,7 +2,7 @@
 /*
 Plugin Name:  AB Content Alterer old
 Description:  WordPress Content Alterer: Change Unbounce and Leadpages in content to <strong>Instapage</strong>
-Version:      0.1.0
+Version:      0.1.1
 Author:       andrzej.bialowas@instapage.com
 */
 include 'abAlternateClass.php';
