@@ -5,50 +5,52 @@ Description:  WordPress Content Alterer: Change Unbounce and Leadpages in conten
 Version:      0.1.0
 Author:       andrzej.bialowas@instapage.com
 */
+include 'abAlternateClass.php';
+
 defined('ABSPATH') or die('No script kiddies please!');
 
-class abContentAlererSettingsPage {
-    /**
-     * Holds the values to be used in the fields callbacks
-     */
+class abContentAltererSettingsPage {
+  /**
+   * Holds the values to be used in the fields callbacks
+   */
   private $options;
 
   /**
    * Start up
    */
   public function __construct() {
-    add_action('admin_menu', array( $this, 'add_plugin_page'));
-    add_action('admin_init', array( $this, 'page_init'));
+    add_action('admin_menu', [$this, 'addPluginPage']);
+    add_action('admin_init', [$this, 'pageInit']);
   }
 
   /**
    * Add options page
    */
-  public function add_plugin_page() {
+  public function addPluginPage() {
     // This page will be under "Settings"
     add_options_page(
       'Settings Admin', 
       'AB Content Alterer Settings', 
       'manage_options', 
       'ab-settings-admin', 
-      array($this, 'create_admin_page')
+      [$this, 'createAdminPage']
     );
   }
 
   /**
    * Options page callback
    */
-  public function create_admin_page() {
+  public function createAdminPage() {
     // Set class property
     $this->options = get_option('ab_alterer_option_group');
     ?>
     <div class="wrap">
-      <h1>AB Content Alterer</h1>
+      <h1><?php __('AB Content Alterer'); ?></h1>
       <form method="post" action="options.php">
       <?php
         // This prints out all hidden setting fields
-        settings_fields( 'ab_alterer_options' );
-        do_settings_sections( 'ab-settings-admin' );
+        settings_fields('ab_alterer_options');
+        do_settings_sections('ab_settings_admin');
         submit_button();
       ?>
       </form>
@@ -59,33 +61,33 @@ class abContentAlererSettingsPage {
   /**
    * Register and add settings
    */
-  public function page_init() {        
+  public function pageInit() {        
     register_setting(
       'ab_alterer_options', // Option group
       'ab_alterer_option_group', // Option name
-      array( $this, 'sanitize' ) // Sanitize
+      [$this, 'sanitize'] // Sanitize
     );
 
     add_settings_section(
       'setting_section_id', // ID
       'Content Altering settings', // Title
-      array( $this, 'print_section_info' ), // Callback
-      'ab-settings-admin' // Page
+      [$this, 'printSectionInfo'], // Callback
+      'ab_settings_admin' // Page
     );  
 
     add_settings_field(
       'alterFrom', // ID
       'Altered Text:', // Title 
-      array( $this, 'alterFromCallback' ), // Callback
-      'ab-settings-admin', // Page
+      [$this, 'alterFromCallback'], // Callback
+      'ab_settings_admin', // Page
       'setting_section_id' // Section           
     );      
 
     add_settings_field(
       'alterTo', 
       'Text to alter:', 
-      array( $this, 'alterToCallback' ), 
-      'ab-settings-admin', 
+      [$this, 'alterToCallback'], 
+      'ab_settings_admin', 
       'setting_section_id'
     );      
   }
@@ -97,11 +99,11 @@ class abContentAlererSettingsPage {
    */
   public function sanitize( $input ) {
     $new_input = [];
-    if( isset( $input['alterFrom'] ) )
-      $new_input['alterFrom'] = sanitize_text_field( $input['alterFrom'] );
+    if (isset($input['alterFrom']))
+      $new_input['alterFrom'] = sanitize_text_field($input['alterFrom']);
 
-    if( isset( $input['alterTo'] ) )
-      $new_input['alterTo'] = sanitize_text_field( $input['alterTo'] );
+    if (isset($input['alterTo']))
+      $new_input['alterTo'] = sanitize_text_field($input['alterTo']);
 
     return $new_input;
   }
@@ -109,8 +111,8 @@ class abContentAlererSettingsPage {
   /** 
    * Print the Section text
    */
-  public function print_section_info() {
-    print 'Enter your Content Altering settings below:';
+  public function printSectionInfo() {
+    print __('Enter your Content Altering settings below:');
   }
 
   /** 
@@ -119,7 +121,7 @@ class abContentAlererSettingsPage {
   public function alterFromCallback() {
     printf(
       '<input type="text" id="alterFrom" name="ab_alterer_option_group[alterFrom]" value="%s" />',
-      isset( $this->options['alterFrom'] ) ? esc_attr( $this->options['alterFrom']) : ''
+      isset($this->options['alterFrom']) ? esc_attr($this->options['alterFrom']) : ''
     );
   }
 
@@ -129,34 +131,13 @@ class abContentAlererSettingsPage {
   public function alterToCallback() {
     printf(
       '<input type="text" id="alterTo" name="ab_alterer_option_group[alterTo]" value="%s" />',
-      isset( $this->options['alterTo'] ) ? esc_attr( $this->options['alterTo']) : ''
+      isset($this->options['alterTo']) ? esc_attr($this->options['alterTo']) : ''
     );
   }
 }
 
-if( is_admin() ) {
-  $my_settings_page = new abContentAlererSettingsPage();
+if (is_admin()) {
+  new abContentAltererSettingsPage();
 }
 
-/**
-* This class adds an action which replaces strings from array named $textToAlter in 
-* content of posts and pages with $alterText string.
-*/
-class AbAlternateContent {
-  public function __construct() {
-    add_action('the_content', [$this, 'textAlternate']);
-  }
-
-  function textAlternate($text) {
-    $textToAlter = get_option('ab_alterer_option_group')['alterFrom'];
-    $alterText = get_option('ab_alterer_option_group')['alterTo']; 
-    $alteredText = str_ireplace(
-      $textToAlter,
-      $alterText,
-      $text
-    );
-
-    return $alteredText;
-  }
-}
-$abAlternateContentDo = new AbAlternateContent();
+new ABContentPlugin\ContentAlternation();
