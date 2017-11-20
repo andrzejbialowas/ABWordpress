@@ -2,6 +2,9 @@
 class abContentAltererSettingsPage {
   /**
    * Holds the values to be used in the fields callbacks
+   * @var array $options - This array includes options from plugin
+   * @var string $options['alterFrom'] - string to alternate
+   * @var string $options['alterTo'] - string to replace alternated text
    */
   private $options;
 
