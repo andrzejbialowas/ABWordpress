@@ -1,31 +1,19 @@
 <?php
 /*
 Plugin Name:  AB Content Alterer
-Description:  WordPress Content Alterer: Change Unbounce and Leadpages in content to <strong>Instapage</strong>
-Version:      0.1.0
+Description:  WordPress Content Alterer: Change Unnbounce and Leadpages in content to <strong>Instapage</strong>
+Version:      0.1.1
 Author:       andrzej.bialowas@instapage.com
 */
 defined('ABSPATH') or die('No script kiddies please!');
-/**
-* This class adds an action which replaces strings from array named $textToAlter in 
-* content of posts and pages with $alterText string.
-*/
-class AbAlternateContent {
-  public function __construct() {
-    add_action('the_content', [$this, 'textAlternate']);
-  }
-  function textAlternate($text) {
-    $textToAlter = [
-      'leadpages',
-      'unbounce'
-    ];
-    $alterText = 'Instapage';
-    $alteredText = str_ireplace(
-      $textToAlter,
-      $alterText,
-      $text
-    );
-    return $alteredText;
-  }
+
+include 'abAlternateClass.php';
+include 'abContentAltererSettingsPage.php';
+
+
+
+if (is_admin()) {
+  new abContentAltererSettingsPage();
 }
-$abAlterContent = new AbAlternateContent();
+
+new ABContentPlugin\ContentAlternation();
