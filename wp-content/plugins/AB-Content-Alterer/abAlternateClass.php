@@ -1,7 +1,7 @@
 <?php 
 namespace ABContentPlugin;
 /**
-* This class adds an action which replaces strings from array named $textToAlter in 
+* This class adds an acttion which replaces strings from array named $textToAlter in 
 * content of posts and pages with $alterText string.
 */
 class ContentAlternation {
