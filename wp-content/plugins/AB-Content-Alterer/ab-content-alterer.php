@@ -8,8 +8,8 @@ Author:       andrzej.bialowas@instapage.com
 defined('ABSPATH') or die('No script kiddies please!');
 
 spl_autoload_register(function($className){
-  $className = strtolower(str_ireplace("ABContentPlugin\\", "", $className));
-  include "classes/" . $className . ".php";
+  $className = strtolower(str_ireplace("ABContentPlugin\\", "classes/", $className));
+  include $className . ".php";
 });
 
 
