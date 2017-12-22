@@ -1,5 +1,6 @@
 <?php 
-class abContentAltererSettingsPage {
+namespace ABContentPlugin;
+class SettingsPage {
   /**
    * Holds the values to be used in the fields callbacks
    * @var array $options - This array includes options from plugin 
