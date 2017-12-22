@@ -7,13 +7,13 @@ Author:       andrzej.bialowas@instapage.com
 */
 defined('ABSPATH') or die('No script kiddies please!');
 
-include 'abAlternateClass.php';
-include 'abContentAltererSettingsPage.php';
-
-
+spl_autoload_register(function($className){
+  $className = strtolower(str_ireplace("ABContentPlugin\\", "classes/", $className));
+  include $className . ".php";
+});
 
 if (is_admin()) {
-  new abContentAltererSettingsPage();
+  new ABContentPlugin\SettingsPage();
+} else {
+  new ABContentPlugin\ContentAlternation();
 }
-
-new ABContentPlugin\ContentAlternation();
