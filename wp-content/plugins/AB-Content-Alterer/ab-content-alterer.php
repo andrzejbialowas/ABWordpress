@@ -15,6 +15,8 @@ spl_autoload_register(function($className){
 
 if (is_admin()) {
   new ABContentPlugin\SettingsPage();
+} else {
+  new ABContentPlugin\ContentAlternation();
 }
 
-new ABContentPlugin\ContentAlternation();
+
